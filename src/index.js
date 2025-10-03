@@ -1,20 +1,19 @@
-require('dotenv').config();
+
 const app = require('./app');
 const mongoose = require('mongoose');   
+const config = require('./config/config');
 
-
-const port = process.env.PORT || 3000;
 
 
 
 const startServer =()=>{
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+app.listen(config.port, () => {
+    console.log(`Server is running on port ${config.port}`);
 }); 
 } 
 
 
-mongoose.connect(process.env.MONGODB_URL).then(() => {
+mongoose.connect(config.mongoose.url).then(() => {
     console.log('Connected to MongoDB');
     startServer();
 }).catch((err) => {

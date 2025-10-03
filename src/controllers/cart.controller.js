@@ -1,0 +1,50 @@
+const httpStatus = require("http-status");
+const catchAsync = require("../utils/catchAsync");
+const { cartService } = require("../services");
+
+const getCart = catchAsync(async (req, res) => {
+  const cart = await cartService.getCartByUser(req.user);
+  res.send(cart);
+});
+
+
+const addProductToCart = catchAsync(async (req, res) => {
+  const cart = await cartService.addProductToCart(
+    req.user,
+    req.body.productId,
+    req.body.quantity
+  );
+
+  res.status(httpStatus.CREATED).send(cart);
+});
+
+const updateProductInCart = catchAsync(async (req, res) => {
+  const {quantity} = req.body;
+ if(quantity>0){
+const cart  = await cartService.updateProductInCart(req.user,
+  req.body.productId,
+  req.body.quantity)
+res.status(httpStatus.OK).send(cart)
+ }
+ else if(quantity==0){
+  await cartService.deleteProductFromCart(req.user,req.body.productId);
+  res.status(httpStatus.NO_CONTENT).end()
+ }
+});
+
+
+const checkout = catchAsync(async (req, res) => {
+  
+  const cart = await cartService.checkout(req.user);
+  
+  return (
+    res.status(httpStatus.NO_CONTENT).send(cart)
+  );
+});
+
+module.exports = {
+  getCart,
+  addProductToCart,
+  updateProductInCart,
+  checkout,
+};
