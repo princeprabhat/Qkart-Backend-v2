@@ -1,9 +1,11 @@
-const httpStatus = require("http-status");
+const {status:httpStatus} = require("http-status");
 const config = require("../config/config");
-const ApiError = require("../utils/ApiError");
+
+
 
 const errorHandler = (err, req, res, next) => {
   // Default values if error isn't an ApiError
+
   let statusCode = err.statusCode || httpStatus.INTERNAL_SERVER_ERROR;
   let message = err.message || "Internal Server Error";
 
@@ -18,11 +20,11 @@ const errorHandler = (err, req, res, next) => {
     ...(config.env === "development" && { stack: err.stack }),
   };
 
-  if (config.env === "development") {
+  if (config.env === "development") {     
     console.error("❌ Error:", err);
   }
 
-  res.status(statusCode).send(response);
+ res.send({Error:response.message});
 };
 
 module.exports = {

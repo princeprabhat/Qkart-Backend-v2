@@ -1,5 +1,5 @@
 const { User } = require("../models");
-const httpStatus = require("http-status");
+const {status:httpStatus} = require("http-status");
 const ApiError = require("../utils/ApiError");
 
 
@@ -27,7 +27,7 @@ return userResult
 }
 
 const createUser = async(userBody)=>{
-const {email} = userBody;
+const {email,isAdmin=false} = userBody;
 
     const checkEmail = await User.isEmailTaken(email);
     if(checkEmail){

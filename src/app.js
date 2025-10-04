@@ -1,7 +1,7 @@
 const express = require("express");
 const compression = require("compression");
 const cors = require("cors");
-const httpStatus = require("http-status");
+const {status:httpStatus} = require("http-status");
 const routes = require("./routes");
 const { errorHandler } = require("./middlewares/error");
 const ApiError = require("./utils/ApiError");

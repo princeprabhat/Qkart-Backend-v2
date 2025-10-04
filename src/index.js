@@ -13,6 +13,7 @@ app.listen(config.port, () => {
 } 
 
 
+
 mongoose.connect(config.mongoose.url).then(() => {
     console.log('Connected to MongoDB');
     startServer();

@@ -1,4 +1,4 @@
-const httpStatus = require("http-status");
+const {status:httpStatus} = require("http-status");
 const userService = require("./user.service");
 const ApiError = require("../utils/ApiError");
 const User = require("../models/user.model");

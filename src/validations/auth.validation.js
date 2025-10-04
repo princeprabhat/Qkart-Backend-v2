@@ -5,7 +5,8 @@ const register = {
   body:Joi.object().keys({
     email:Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required(),
     password:Joi.string().custom(password,"password").required(),
-    name:Joi.string().required()
+    name:Joi.string().required(),
+    isAdmin:Joi.boolean().optional().default(false)
     
   }),
   

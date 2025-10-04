@@ -7,7 +7,7 @@ const getProductById = async (id) => {
 
 
 const getProducts = async () => {
-  return Product.find({});
+  return await Product.find({});
 };
 
 module.exports = {
