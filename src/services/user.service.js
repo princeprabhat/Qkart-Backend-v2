@@ -31,10 +31,12 @@ const {email,isAdmin=false} = userBody;
 
     const checkEmail = await User.isEmailTaken(email);
     if(checkEmail){
-        throw new ApiError(httpStatus.OK, "Email already taken") 
+        throw new ApiError(httpStatus.CONFLICT, "Email already taken") ;
+
     }
         // const salt = await bcrypt.genSalt();
         // const hashedPassword = await bcrypt.hash(password, salt);
+        
         const result = await User.create({...userBody});
         // const result = await newUser.save();
         return result

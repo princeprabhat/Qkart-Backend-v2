@@ -24,7 +24,7 @@ const errorHandler = (err, req, res, next) => {
     console.error("❌ Error:", err);
   }
 
- res.send({Error:response.message});
+ res.status(statusCode).send({Error:response.message});
 };
 
 module.exports = {
