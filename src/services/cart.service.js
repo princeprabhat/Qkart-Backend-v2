@@ -6,12 +6,25 @@ const config = require("../config/config");
 const getCartByUser = async (user) => {
   const cart = await Cart.findOne({email:user.email})
   if(!cart){
-    throw new ApiError(httpStatus.NOT_FOUND,"User does not have a cart")
+    try {
+      const newCart = await Cart.create({email:user.email,paymentOption:config.default_payment_option,cartItems:[]});
+     if(!newCart) throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR)
+      
+      return newCart;
+      
+    } catch (error) {
+    throw error;
+      
+    }
   }
   return cart;
 };
 
 const addProductToCart = async (user, productId, quantity) => {
+
+  if(quantity<=0){
+    throw new ApiError(httpStatus.BAD_REQUEST,"Quantity cannot be less than or equal to zero");
+  }
   const product = await Product.findById(productId);
   if(!product){
     throw new ApiError(httpStatus.BAD_REQUEST,"Product doesn't exist in database");
@@ -22,8 +35,7 @@ const addProductToCart = async (user, productId, quantity) => {
   if(!cart){
     try {
       const newCart = await Cart.create({email:user.email,paymentOption:config.default_payment_option,cartItems:[{product,quantity}]});
-     if(!newCart)
-     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR)
+     if(!newCart) throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR)
       
       return newCart;
       
@@ -53,6 +65,7 @@ const addProductToCart = async (user, productId, quantity) => {
 };
 
 const updateProductInCart = async (user, productId, quantity) => {
+
   const product = await Product.findById(productId);
   if(!product){
     throw new ApiError(httpStatus.BAD_REQUEST,"Product doesn't exist in database");
@@ -85,6 +98,7 @@ const updateProductInCart = async (user, productId, quantity) => {
 };
 
 const deleteProductFromCart = async (user, productId) => {
+
   try {
   const cart = await Cart.findOne({email:user.email});
   if(!cart){
@@ -97,9 +111,10 @@ const deleteProductFromCart = async (user, productId) => {
   }
 
   const updatedCart = cart.cartItems.filter((el)=>el.product._id != productId);
-  cart.cartItems=updatedCart;
+  cart.cartItems=updatedCart.length>0?updatedCart:[];
 
   await cart.save()
+  return cart;
     
   } catch (error) {
     throw error

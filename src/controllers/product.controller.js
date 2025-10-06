@@ -9,12 +9,12 @@ const getProductById = catchAsync(async (req, res) => {
   if (!product) {
     throw new ApiError(httpStatus.NOT_FOUND, "Product not found");
   }
-  res.send(product);
+  res.status(httpStatus.OK).json({ product });
 });
 
 const getProducts = catchAsync(async (req, res) => {
   const products = await productService.getProducts();
-  res.send(products);
+  res.status(httpStatus.OK).json({products});
 });
 
 module.exports = {

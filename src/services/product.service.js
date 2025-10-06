@@ -2,12 +2,14 @@ const { Product } = require("../models");
 
 
 const getProductById = async (id) => {
-  return Product.findById(id);
+  return await Product.findById(id);
 };
 
 
 const getProducts = async () => {
-  return await Product.find({});
+  const products = await Product.find({});
+  
+  return products;
 };
 
 module.exports = {
