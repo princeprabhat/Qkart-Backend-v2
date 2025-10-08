@@ -8,13 +8,16 @@ const router = express.Router();
 
 // TODO: CRIO_TASK_MODULE_UNDERSTANDING_BASICS - Implement a route definition for `/v1/users/:userId`
 
-const validateUser = validate(userValidation.getUser)
+const validateUser = validate(userValidation.getUser);
 
-router.get('/:userId',auth,validateUser,userController.getUser)
+router.get("/:userId", auth, validateUser, userController.getUser);
 
-
-
-
+router.get(
+  "/address/:userId",
+  auth,
+  validateUser,
+  userController.getAddressesByUserId
+);
 
 // Add the address
 router.post(
@@ -31,6 +34,5 @@ router.delete(
   validate(userValidation.deleteAddress),
   userController.deleteAddress
 );
-
 
 module.exports = router;

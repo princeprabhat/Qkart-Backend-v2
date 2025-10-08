@@ -39,11 +39,30 @@ const createUser = async (userBody) => {
 };
 
 const getUserAddressById = async (id) => {
-  const address = await User.findOne({ _id: id }, { address: 1, email: 1 });
-  return address;
+  const user = await User.findById(id, { addresses: 1 });
+  return user.addresses;
 };
 
 const addAddress = async (user, newAddress) => {
+  const normalize = (str) =>
+    str
+      .toLowerCase()
+      .replace(/[^a-z0-9]/gi, "")
+      .trim();
+
+  const normalizedNew = normalize(newAddress);
+
+  const addressExists = user.addresses.some(
+    (addr) => normalize(addr.address) === normalizedNew
+  );
+
+  if (addressExists) {
+    throw new ApiError(
+      httpStatus.CONFLICT,
+      "Address already exists, Please use different characters from the existing ones"
+    );
+  }
+
   user.addresses.push({ address: newAddress });
   await user.save();
   return user.addresses;
@@ -61,7 +80,7 @@ const deleteAddress = async (user, addressId) => {
     (addr) => addr._id.toString() !== addressId
   );
   await user.save();
-  return user.address;
+  return user.addresses;
 };
 
 module.exports = {

@@ -1,4 +1,4 @@
-const {status:httpStatus} = require("http-status");
+const { status: httpStatus } = require("http-status");
 const catchAsync = require("../utils/catchAsync");
 const { cartService } = require("../services");
 const ApiError = require("../utils/ApiError");
@@ -7,7 +7,6 @@ const getCart = catchAsync(async (req, res) => {
   const cart = await cartService.getCartByUser(req.user);
   res.status(httpStatus.OK).json({ cart });
 });
-
 
 const addProductToCart = catchAsync(async (req, res) => {
   const cart = await cartService.addProductToCart(
@@ -20,32 +19,33 @@ const addProductToCart = catchAsync(async (req, res) => {
 });
 
 const updateProductInCart = catchAsync(async (req, res) => {
-  const {quantity} = req.body;
-  
- 
- if(quantity>0){
-  const cart  = await cartService.updateProductInCart(req.user,
-  req.body.productId,
-  req.body.quantity)
-  res.status(httpStatus.OK).send(cart)
- }
- else if(quantity==0){
-  const newCart = await cartService.deleteProductFromCart(req.user,req.body.productId);
-  res.status(httpStatus.OK).send(newCart);
- }
- else{
-  throw new ApiError(httpStatus.BAD_REQUEST,"Quantity cannot be less than zero");
- }
+  const { quantity } = req.body;
+
+  if (quantity > 0) {
+    const cart = await cartService.updateProductInCart(
+      req.user,
+      req.body.productId,
+      req.body.quantity
+    );
+    res.status(httpStatus.OK).send(cart);
+  } else if (quantity == 0) {
+    const newCart = await cartService.deleteProductFromCart(
+      req.user,
+      req.body.productId
+    );
+    res.status(httpStatus.OK).send(newCart);
+  } else {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      "Quantity cannot be less than zero"
+    );
+  }
 });
 
-
 const checkout = catchAsync(async (req, res) => {
-  
   const cart = await cartService.checkout(req.user);
-  
-  return (
-    res.status(httpStatus.NO_CONTENT).send(cart)
-  );
+
+  return res.status(httpStatus.NO_CONTENT).send(cart);
 });
 
 module.exports = {
