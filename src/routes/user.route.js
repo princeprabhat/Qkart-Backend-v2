@@ -16,12 +16,21 @@ router.get('/:userId',auth,validateUser,userController.getUser)
 
 
 
-
-router.put(
-  "/:userId",
+// Add the address
+router.post(
+  "/address/:userId",
   auth,
-  validate(userValidation.setAddress),
-  userController.setAddress
+  validate(userValidation.addAddress),
+  userController.addAddress
 );
+
+// delete the address
+router.delete(
+  "/address/:userId",
+  auth,
+  validate(userValidation.deleteAddress),
+  userController.deleteAddress
+);
+
 
 module.exports = router;

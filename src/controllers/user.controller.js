@@ -31,7 +31,7 @@ const getUser = catchAsync(async (req, res) => {
 });
 
 
-const setAddress = catchAsync(async (req, res) => {
+const addAddress = catchAsync(async (req, res) => {
   const user = await userService.getUserById(req.params.userId);
 
   if (!user) {
@@ -44,14 +44,39 @@ const setAddress = catchAsync(async (req, res) => {
     );
   }
 
-  const address = await userService.setAddress(user, req.body.address);
+  const address = await userService.addAddress(user, req.body.address);
 
-  res.send({
+  res.status(httpStatus.CREATED).json({
     address: address,
   });
 });
 
+const deleteAddress = catchAsync(async (req, res) => {
+  const addressId = req.body?.addressId;
+  const user = await userService.getUserById(req.params.userId);    
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+  }   
+  if (user.email != req.user.email) {
+    throw new ApiError(
+      httpStatus.FORBIDDEN,
+      "User not authorized to access this resource"
+    );
+  }
+  if (!addressId) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "AddressId is required");
+  }
+
+  const address = await userService.deleteAddress(user, addressId);
+  res.status(httpStatus.OK).json({
+    address: address,
+  });
+});   
+
+
+
 module.exports = {
   getUser,
-  setAddress,
+  addAddress,
+  deleteAddress
 };
