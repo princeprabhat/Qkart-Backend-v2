@@ -8,6 +8,13 @@ const addProductToCart = {
   }),
 };
 
+const checkout = {
+  body: Joi.object().keys({
+    addressId: Joi.string().required().custom(objectId),
+  }),
+};
+
 module.exports = {
   addProductToCart,
+  checkout,
 };

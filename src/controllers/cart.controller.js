@@ -43,9 +43,17 @@ const updateProductInCart = catchAsync(async (req, res) => {
 });
 
 const checkout = catchAsync(async (req, res) => {
-  const cart = await cartService.checkout(req.user);
+  const addressId = req.body?.addressId;
+  if (!addressId) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      "addressId is required to set the selected address"
+    );
+  }
 
-  return res.status(httpStatus.NO_CONTENT).send(cart);
+  const cart = await cartService.checkout(req.user, addressId);
+
+  return res.status(httpStatus.OK).json({ cart });
 });
 
 module.exports = {
