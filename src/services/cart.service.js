@@ -2,6 +2,7 @@ const { status: httpStatus } = require("http-status");
 const { Cart, Product, User } = require("../models");
 const ApiError = require("../utils/ApiError");
 const config = require("../config/config");
+const { Purchase } = require("../models/purchase.model");
 
 const getCartByUser = async (user) => {
   const cart = await Cart.findOne({ email: user.email });
@@ -151,7 +152,7 @@ const checkout = async (user, addressId) => {
     (ac, el) => el.quantity * el.product.cost + ac,
     0
   );
-  //should throw 400 error if address is not set - when User.hasSetNonDefaultAddress() returns false
+  //should throw 400 error if address is not set
   const addressCheck = user.addresses.some(
     (addr) => addr._id.toString() === addressId
   );
@@ -172,6 +173,20 @@ const checkout = async (user, addressId) => {
   user.walletMoney -= costTotal;
 
   await user.save();
+
+  await Purchase.create({
+    userId: user._id,
+    products: cart.cartItems.map((item) => ({
+      productId: item.product._id,
+      quantity: item.quantity,
+      unitPrice: item.product.cost, // store current price
+    })),
+    address: user.addresses.find((addr) => addr._id.toString() === addressId)
+      .address,
+    amount: costTotal,
+    paymentMethod,
+    status: "completed",
+  });
 
   cart.cartItems = [];
   await cart.save();

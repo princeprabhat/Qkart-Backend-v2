@@ -1,7 +1,7 @@
 const express = require("express");
 const compression = require("compression");
 const cors = require("cors");
-const {status:httpStatus} = require("http-status");
+const { status: httpStatus } = require("http-status");
 const routes = require("./routes");
 const { errorHandler } = require("./middlewares/error");
 const ApiError = require("./utils/ApiError");
@@ -30,14 +30,14 @@ app.use(cors());
 // TODO: CRIO_TASK_MODULE_AUTH - Initialize passport and add "jwt" authentication strategy
 app.use(passport.initialize());
 passport.use("jwt", jwtStrategy);
-jwtStrategy(passport)
+jwtStrategy(passport);
 
 // Reroute all API request starting with "/v1" route
 app.use("/api", routes);
 
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {
-    next(new ApiError(httpStatus.NOT_FOUND, "Not found"));
+  next(new ApiError(httpStatus.NOT_FOUND, "Not found"));
 });
 
 // handle error

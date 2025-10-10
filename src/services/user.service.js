@@ -3,15 +3,8 @@ const { status: httpStatus } = require("http-status");
 const ApiError = require("../utils/ApiError");
 
 const getUserById = async (id) => {
-  // try{
   const userResult = await User.findOne({ _id: id });
   return userResult;
-  // }
-  // catch(err){
-
-  //     throw new ApiError(httpStatus.BAD_REQUEST, "\"\"userId\"\" must be a valid mongo id")
-
-  // }
 };
 
 const getUserByEmail = async (email) => {
@@ -24,17 +17,15 @@ const getUserByEmail = async (email) => {
 };
 
 const createUser = async (userBody) => {
-  const { email, isAdmin = false } = userBody;
+  const { email } = userBody;
 
   const checkEmail = await User.isEmailTaken(email);
   if (checkEmail) {
     throw new ApiError(httpStatus.CONFLICT, "Email already taken");
   }
-  // const salt = await bcrypt.genSalt();
-  // const hashedPassword = await bcrypt.hash(password, salt);
 
-  const result = await User.create({ ...userBody });
-  // const result = await newUser.save();
+  const result = await User.create({ ...userBody, isAdmin: false });
+
   return result;
 };
 

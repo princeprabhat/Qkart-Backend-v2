@@ -1,7 +1,6 @@
 const app = require("./app");
 const mongoose = require("mongoose");
 const config = require("./config/config");
-const Product = require("./models/product.model");
 
 const startServer = () => {
   app.listen(config.port, () => {
