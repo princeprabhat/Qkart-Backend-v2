@@ -10,14 +10,14 @@ const { status: httpStatus } = require("http-status");
 const ApiError = require("../utils/ApiError");
 
 const getAllUsers = catchAsync(async (req, res) => {
-  const products = await userService.getAllUsers();
-  if (!products) {
+  const users = await userService.getAllUsers();
+  if (!users) {
     throw new ApiError(
       httpStatus.INTERNAL_SERVER_ERROR,
-      "Something went wrong while getting products"
+      "Something went wrong while getting users"
     );
   }
-  res.status(httpStatus.OK).json({ products });
+  res.status(httpStatus.OK).json({ data: users });
 });
 
 const createNormalUser = catchAsync(async (req, res) => {
@@ -28,7 +28,7 @@ const createNormalUser = catchAsync(async (req, res) => {
       "Something went wrong while creating user"
     );
   }
-  res.status(httpStatus.CREATED).json({ newUser });
+  res.status(httpStatus.CREATED).json({ data: newUser });
 });
 
 const createAdminUser = catchAsync(async (req, res) => {
@@ -40,7 +40,7 @@ const createAdminUser = catchAsync(async (req, res) => {
     );
   }
 
-  res.status(httpStatus.CREATED).json({ newUser });
+  res.status(httpStatus.CREATED).json({ data: newUser });
 });
 
 const promoteRole = catchAsync(async (req, res) => {
@@ -53,7 +53,7 @@ const promoteRole = catchAsync(async (req, res) => {
     );
   }
 
-  res.status(httpStatus.OK).json({ user: result });
+  res.status(httpStatus.OK).json({ data: result });
 });
 
 const deleteUser = catchAsync(async (req, res) => {
@@ -66,7 +66,7 @@ const deleteUser = catchAsync(async (req, res) => {
     );
   }
 
-  res.status(httpStatus.OK).json({ message: "User deleted successfully" });
+  res.status(httpStatus.OK).json({ data: "User deleted successfully" });
 });
 
 const getAllProducts = catchAsync(async (req, res) => {
@@ -74,7 +74,7 @@ const getAllProducts = catchAsync(async (req, res) => {
   if (!products) {
     throw new ApiError(httpStatus.NOT_FOUND, "No product found");
   }
-  res.status(httpStatus.OK).json({ products });
+  res.status(httpStatus.OK).json({ data: products });
 });
 
 const createProduct = catchAsync(async (req, res) => {
@@ -85,7 +85,7 @@ const createProduct = catchAsync(async (req, res) => {
       "Something went wrong while creating product"
     );
   }
-  res.status(httpStatus.CREATED).json({ product });
+  res.status(httpStatus.CREATED).json({ data: product });
 });
 
 const deleteProduct = catchAsync(async (req, res) => {
@@ -97,12 +97,31 @@ const deleteProduct = catchAsync(async (req, res) => {
       "Product does not exist, or something went wrong"
     );
   }
-  res.status(httpStatus.OK).json({ message: "Product deleted successfully" });
+  res.status(httpStatus.OK).json({ data: "Product deleted successfully" });
+});
+// TODO Add update Product logic and Inventory logic later
+const updateProduct = catchAsync(async (req, res) => {
+  const { productId } = req.params;
+  const updatedProduct = await productService.updateProduct(
+    productId,
+    req.body
+  );
+  if (!updatedProduct) {
+    throw new ApiError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      "Something went wrong while updating the product"
+    );
+  }
+  res.status(httpStatus.OK).json({ data: updatedProduct });
 });
 
-const updateProduct = () => {};
-
-const getInventory = () => {};
+const getInventory = catchAsync(async (req, res) => {
+  const inventoryData = await adminService.getInventoryData();
+  if (!inventoryData) {
+    throw new ApiError(httpStatus.NOT_FOUND, "No inventory data available");
+  }
+  res.status(httpStatus.OK).json({ data: inventoryData });
+});
 
 module.exports = {
   getAllUsers,

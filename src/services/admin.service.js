@@ -1,4 +1,5 @@
 const { User } = require("../models");
+const { Purchase } = require("../models");
 const { status: httpStatus } = require("http-status");
 const ApiError = require("../utils/ApiError");
 
@@ -45,8 +46,15 @@ const deleteUser = async (userId) => {
   return user;
 };
 
+const getInventoryData = async () => {
+  const inventory = await Purchase.find({});
+
+  return inventory;
+};
+
 module.exports = {
   createUser,
   makeAdmin,
   deleteUser,
+  getInventoryData,
 };

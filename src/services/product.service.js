@@ -1,5 +1,6 @@
 const { Product } = require("../models");
 const ApiError = require("../utils/ApiError");
+const { status: httpStatus } = require("http-status");
 
 const getProductById = async (id) => {
   return await Product.findById(id);
@@ -21,9 +22,21 @@ const deleteProduct = async (productId) => {
   return deletedProduct;
 };
 
+const updateProduct = async (productId, updateData) => {
+  const updatedProduct = await Product.findOneAndUpdate(productId, updateData, {
+    new: true,
+    runValidators: true,
+  });
+  if (!updatedProduct) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Cant find the Product to update");
+  }
+  return updatedProduct;
+};
+
 module.exports = {
   getProductById,
   getProducts,
   createProduct,
   deleteProduct,
+  updateProduct,
 };

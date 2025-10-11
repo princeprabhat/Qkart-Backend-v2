@@ -7,6 +7,11 @@ const getUserById = async (id) => {
   return userResult;
 };
 
+const getAllUsers = async () => {
+  const users = await User.find({});
+  return users;
+};
+
 const getUserByEmail = async (email) => {
   try {
     const userResult = await User.findOne({ email: email });
@@ -81,4 +86,5 @@ module.exports = {
   getUserAddressById,
   addAddress,
   deleteAddress,
+  getAllUsers,
 };
