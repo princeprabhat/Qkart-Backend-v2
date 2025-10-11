@@ -38,7 +38,7 @@ const purchaseSchema = mongoose.Schema(
     paymentMethod: {
       type: String,
       enum: ["card", "upi", "cod", "wallet", "other"],
-      default: "other",
+      default: "wallet",
     },
     status: {
       type: String,

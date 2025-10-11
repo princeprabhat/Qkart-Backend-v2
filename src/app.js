@@ -8,8 +8,20 @@ const ApiError = require("./utils/ApiError");
 const { jwtStrategy } = require("./config/passport");
 const helmet = require("helmet");
 const passport = require("passport");
+const rateLimit = require("express-rate-limit");
 
 const app = express();
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    error: "Too many requests from this IP, please try again later.",
+    retryAfter: "15 minutes"
+  }
+});
 
 // set security HTTP headers - https://helmetjs.github.io/
 app.use(helmet());
@@ -31,6 +43,7 @@ app.use(passport.initialize());
 passport.use("jwt", jwtStrategy);
 jwtStrategy(passport);
 
+app.use('/api',limiter);
 // Reroute all API request starting with "/v1" route
 app.use("/api", routes);
 

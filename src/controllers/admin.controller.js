@@ -99,7 +99,7 @@ const deleteProduct = catchAsync(async (req, res) => {
   }
   res.status(httpStatus.OK).json({ data: "Product deleted successfully" });
 });
-// TODO Add update Product logic and Inventory logic later
+
 const updateProduct = catchAsync(async (req, res) => {
   const { productId } = req.params;
   const updatedProduct = await productService.updateProduct(
