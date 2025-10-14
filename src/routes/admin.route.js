@@ -79,7 +79,7 @@ router.put(
   validate(productValidation.updateProduct),
   adminController.updateProduct
 );
-// Get all purchase
+// Get all purchase from inventory
 router.get("/inventory/all", auth, isAdmin, adminController.getInventory);
 
 module.exports = router;
