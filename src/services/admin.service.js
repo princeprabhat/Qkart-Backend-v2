@@ -19,8 +19,8 @@ const createUser = async (userBody) => {
   return result;
 };
 
-const makeAdmin = async (userId) => {
-  const user = await User.findOne({ _id: userId });
+const makeAdmin = async (email) => {
+  const user = await User.findOne({ email: email });
   if (!user) {
     throw new ApiError(
       httpStatus.NOT_FOUND,
@@ -32,6 +32,27 @@ const makeAdmin = async (userId) => {
   }
 
   user.isAdmin = true;
+  await user.save();
+
+  return user;
+};
+
+const updateUser = async (userId, updateData) => {
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  if (updateData.email && updateData.email !== user.email) {
+    const isEmailTaken = await User.isEmailTaken(updateData.email);
+    if (isEmailTaken) {
+      throw new ApiError(httpStatus.CONFLICT, "Email already taken");
+    }
+    user.email = updateData.email;
+  }
+  if (updateData.name) user.name = updateData.name;
+  if (updateData.password) user.password = updateData.password;
+
   await user.save();
 
   return user;
@@ -57,4 +78,5 @@ module.exports = {
   makeAdmin,
   deleteUser,
   getInventoryData,
+  updateUser,
 };

@@ -23,10 +23,14 @@ const deleteProduct = async (productId) => {
 };
 
 const updateProduct = async (productId, updateData) => {
-  const updatedProduct = await Product.findOneAndUpdate(productId, updateData, {
-    new: true,
-    runValidators: true,
-  });
+  const updatedProduct = await Product.findOneAndUpdate(
+    { _id: productId },
+    updateData,
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
   if (!updatedProduct) {
     throw new ApiError(httpStatus.NOT_FOUND, "Cant find the Product to update");
   }

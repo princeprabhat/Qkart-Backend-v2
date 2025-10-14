@@ -176,15 +176,18 @@ const checkout = async (user, addressId) => {
 
   await Purchase.create({
     userId: user._id,
+    email: user.email,
+    name: user.name,
     products: cart.cartItems.map((item) => ({
       productId: item.product._id,
+      productName: item.product.name,
       quantity: item.quantity,
       unitPrice: item.product.cost, // store current price
     })),
     address: user.addresses.find((addr) => addr._id.toString() === addressId)
       .address,
     amount: costTotal,
-    paymentMethod,
+    paymentMethod: "wallet",
     status: "completed",
   });
 

@@ -7,12 +7,28 @@ const purchaseSchema = mongoose.Schema(
       ref: "User",
       required: true,
     },
+    name: {
+      type: String,
+      ref: "User",
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      ref: "User",
+      trim: true,
+    },
     products: [
       {
         productId: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "Product",
           required: true,
+        },
+        productName: {
+          type: String,
+          required: true,
+          ref: "Product",
         },
         quantity: {
           type: Number,

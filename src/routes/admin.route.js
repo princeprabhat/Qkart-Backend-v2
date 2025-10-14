@@ -29,12 +29,21 @@ router.post(
 );
 // Update normal user role to admin
 router.patch(
-  "/users/adminRole/:userId",
+  "/users/adminRole/edit",
   auth,
   isAdmin,
-  validate(userValidation.getUser),
+  validate(userValidation.promoteRole),
   adminController.promoteRole
 );
+// Update a User (Normal Fields: email, name, password)
+router.put(
+  "/users/:userId",
+  auth,
+  isAdmin,
+  validate(userValidation.updateUser),
+  adminController.updateUser
+);
+
 // Delete a user
 router.delete(
   "/users/deleteUser/:userId",

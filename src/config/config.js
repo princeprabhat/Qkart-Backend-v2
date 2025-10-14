@@ -2,7 +2,7 @@ const dotenv = require("dotenv");
 const path = require("path");
 const Joi = require("joi");
 
-const DEFAULT_WALLET_MONEY = 500;
+const DEFAULT_WALLET_MONEY = 5000;
 const DEFAULT_PAYMENT_OPTION = "PAYMENT_OPTION_DEFAULT";
 
 dotenv.config({ path: path.join(__dirname, "../../.env") });

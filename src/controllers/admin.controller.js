@@ -44,8 +44,8 @@ const createAdminUser = catchAsync(async (req, res) => {
 });
 
 const promoteRole = catchAsync(async (req, res) => {
-  const { userId } = req.params;
-  const result = await adminService.makeAdmin(userId);
+  const { email } = req.body;
+  const result = await adminService.makeAdmin(email);
   if (!result) {
     throw new ApiError(
       httpStatus.INTERNAL_SERVER_ERROR,
@@ -54,6 +54,19 @@ const promoteRole = catchAsync(async (req, res) => {
   }
 
   res.status(httpStatus.OK).json({ data: result });
+});
+const updateUser = catchAsync(async (req, res) => {
+  const { userId } = req.params;
+  const { email, name, password } = req.body || {};
+  if (!email && !name && !password)
+    throw new ApiError(httpStatus.BAD_REQUEST, "No Data Provided to update");
+
+  const updatedUser = await adminService.updateUser(userId, req.body);
+  if (!updatedUser) {
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found or Update failed");
+  }
+
+  res.status(httpStatus.OK).json({ user: updatedUser });
 });
 
 const deleteUser = catchAsync(async (req, res) => {
@@ -66,7 +79,7 @@ const deleteUser = catchAsync(async (req, res) => {
     );
   }
 
-  res.status(httpStatus.OK).json({ data: "User deleted successfully" });
+  res.status(httpStatus.OK).json({ message: "User deleted successfully" });
 });
 
 const getAllProducts = catchAsync(async (req, res) => {
@@ -134,4 +147,5 @@ module.exports = {
   deleteProduct,
   updateProduct,
   getInventory,
+  updateUser,
 };
