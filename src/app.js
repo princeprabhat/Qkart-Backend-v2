@@ -19,8 +19,8 @@ const limiter = rateLimit({
   legacyHeaders: false,
   message: {
     error: "Too many requests from this IP, please try again later.",
-    retryAfter: "15 minutes"
-  }
+    retryAfter: "15 minutes",
+  },
 });
 
 // set security HTTP headers - https://helmetjs.github.io/
@@ -43,7 +43,7 @@ app.use(passport.initialize());
 passport.use("jwt", jwtStrategy);
 jwtStrategy(passport);
 
-app.use('/api',limiter);
+app.use("/api", limiter);
 // Reroute all API request starting with "/v1" route
 app.use("/api", routes);
 

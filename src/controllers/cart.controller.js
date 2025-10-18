@@ -8,6 +8,18 @@ const getCart = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).json({ cart });
 });
 
+const getCartCount = catchAsync(async (req, res) => {
+  const cartLength = await cartService.getCartLength(req.user);
+
+  if (cartLength == null)
+    throw new ApiError(
+      httpStatus.NOT_FOUND,
+      "Some error occured while getting cart length"
+    );
+
+  res.status(httpStatus.OK).json({ count: cartLength });
+});
+
 const addProductToCart = catchAsync(async (req, res) => {
   const cart = await cartService.addProductToCart(
     req.user,
@@ -61,4 +73,5 @@ module.exports = {
   addProductToCart,
   updateProductInCart,
   checkout,
+  getCartCount,
 };

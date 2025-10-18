@@ -23,6 +23,12 @@ const getCartByUser = async (user) => {
   return cart;
 };
 
+const getCartLength = async (user) => {
+  const cart = await getCartByUser(user);
+
+  return cart.cartItems.length;
+};
+
 const addProductToCart = async (user, productId, quantity) => {
   if (quantity <= 0) {
     throw new ApiError(
@@ -209,4 +215,5 @@ module.exports = {
   updateProductInCart,
   deleteProductFromCart,
   checkout,
+  getCartLength,
 };

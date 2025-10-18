@@ -8,6 +8,8 @@ const router = express.Router();
 
 router.get("/", auth, cartController.getCart);
 
+router.get("/cartCount", auth, cartController.getCartCount);
+
 router.post(
   "/",
   auth,
