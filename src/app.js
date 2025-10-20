@@ -9,12 +9,15 @@ const { jwtStrategy } = require("./config/passport");
 const helmet = require("helmet");
 const passport = require("passport");
 const rateLimit = require("express-rate-limit");
+const config = require("./config/config");
 
 const app = express();
 
+const limit = config.env === "production" ? 150 : 500;
+
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  limit: 100,
+  limit: limit,
   standardHeaders: true,
   legacyHeaders: false,
   message: {
